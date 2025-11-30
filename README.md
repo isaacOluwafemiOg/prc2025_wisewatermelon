@@ -1,6 +1,6 @@
 # ✈️ Flight Fuel Consumption Prediction (PRC-2025)
 
-**Team/Model Codename:** Wise Watermelon 🍉  
+**Team:** Wise Watermelon 🍉  
 **Model Version:** v26
 
 submission for prc2025 data challenge of predicting fuel consumption for specified flight segments
