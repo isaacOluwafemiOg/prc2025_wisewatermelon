@@ -145,10 +145,10 @@ To prevent data leakage and ensure the model handles new flights correctly, we u
 │   ├── fuel_*.parquet           # Target labels and submission templates
 │   └── apt.parquet              # Airport database
 │
-├── 📓 model_training.ipynb      # Main pipeline notebook
-├── 📄 prep_train_acropole_test.csv  # Preprocessed training cache
-├── 📄 prep_rank_acropole_test.csv   # Preprocessed rank cache
-├── 📄 prep_final_acropole_test.csv  # Preprocessed final cache
+├── 📓 train_predict.ipynb      # Main pipeline notebook
+├── 📄 prep_train_acropole.csv  # Preprocessed training cache
+├── 📄 prep_rank_acropole.csv   # Preprocessed rank cache
+├── 📄 prep_final_acropole.csv  # Preprocessed final cache
 │
 └── 📤 Submissions
     ├── wise-watermelon_v26.parquet    # Output for Ranking Phase
