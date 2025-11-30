@@ -83,7 +83,7 @@ The notebook is run in a conda environment defined by `data_prep_environment.yml
 
 ---
 
-## **Usage Notes**
+### **Usage Notes**
 
 - Ensure all flight parquet files are available in the corresponding directories (`TRAIN_FLIGHTS_DIR`, `RANK_FLIGHTS_DIR`, `FINAL_FLIGHTS_DIR`).
 - Aircraft metadata files must be pre-downloaded. It is accessible in the `external_data` directory of this repo
@@ -94,9 +94,85 @@ The notebook is run in a conda environment defined by `data_prep_environment.yml
 
 ---
 
-## **References**
+### **References**
 
 - FAA Aircraft Characteristic Database: [https://www.faa.gov/airports/engineering/aircraft_char_database/](https://www.faa.gov/airports/engineering/aircraft_char_database/)
 - ACP / Acropole fuel estimation library
 - OpenAP aircraft performance database
 
+You can copy and paste this directly into your repository.
+✈️ Flight Fuel Consumption Prediction (PRC-2025)
+Team/Model Codename: Wise Watermelon 🍉
+Model Version: v26
+📖 Overview
+This repository contains the solution pipeline for predicting aircraft fuel consumption based on flight telemetry, weather, and aircraft metadata. The solution utilizes a CatBoost Ensemble approach, leveraging robust feature engineering and a rigorous Stratified Group K-Fold validation strategy to ensure generalization across different aircraft types and flight profiles.
+The pipeline processes training data, generates validation rankings, and produces final submissions in Parquet format.
+🛠️ Key Methodology
+1. Feature Engineering
+We transform raw flight logs into actionable features:
+Geospatial Analysis: Implementation of the Haversine formula to calculate great-circle distances between waypoints and total flight distance.
+Temporal Features: Computation of segment durations (in minutes) derived from UTC timestamps.
+Physics & Aerodynamics: Aggregation of key metrics including sum_drag, sum_thrust, sum_fuel_flow, and total_climb_height.
+2. Validation Strategy (Critical)
+To prevent data leakage and ensure the model handles new flights correctly, we use Stratified Group K-Fold Cross-Validation (k=5):
+Grouping: Data is grouped by flight_id. This ensures that all segments of a single flight remain together in either the training or validation set, preventing the model from "memorizing" specific flight curves.
+Stratification: We stratify based on a composite key of missing_segment status and aircraft_type. This ensures that difficult cases (rare planes or incomplete logs) are evenly distributed across folds.
+3. Model & Inference
+Algorithm: CatBoostRegressor (Gradient Boosting on Decision Trees).
+Optimization: Hyperparameters were tuned using Optuna to minimize RMSE.
+Ensembling: The final prediction is an average of the 5 models trained during cross-validation.
+Physics Constraint: Predictions are clipped to ensure no fuel consumption value is lower than the minimum observed in the training set (non-negative constraint).
+📂 Project Structure
+code
+Text
+├── 📂 prc-2025-datasets/        # External Data Directory
+│   ├── flights_train/           # Raw flight sensor data
+│   ├── flights_rank/            # Validation flight data
+│   ├── flights_final/           # Final test flight data
+│   ├── flightlist_*.parquet     # Metadata lists
+│   ├── fuel_*.parquet           # Target labels and submission templates
+│   └── apt.parquet              # Airport database
+│
+├── 📓 model_training.ipynb      # Main pipeline notebook
+├── 📄 prep_train_acropole_test.csv  # Preprocessed training cache
+├── 📄 prep_rank_acropole_test.csv   # Preprocessed rank cache
+├── 📄 prep_final_acropole_test.csv  # Preprocessed final cache
+│
+└── 📤 Submissions
+    ├── wise-watermelon_v26.parquet    # Output for Ranking Phase
+    └── wise-watermelon_final.parquet  # Output for Final Phase
+⚙️ Prerequisites
+The solution requires Python 3.x and the following libraries:
+code
+Python
+catboost
+pandas
+numpy
+scikit-learn
+pathlib
+🚀 Pipeline Workflow
+The notebook follows a linear execution path:
+Configuration: Sets file paths for Train, Rank, and Final datasets.
+Preprocessing:
+Loads pre-computed CSVs.
+Calculates distance and duration using extra_features().
+Fits LabelEncoder on the training set for categorical variables (e.g., aircraft_type, engine_model).
+Feature Selection: Filters the dataset to a curated list of ~40 features (sel_ind) identified through iterative importance analysis.
+Training:
+Splits data using StratifiedGroupKFold.
+Trains 5 independent CatBoost models.
+CV Performance: ~213.90 RMSE.
+Inference (Rank & Final):
+Applies the same encoders and feature engineering to the test sets.
+Predicts using all 5 models and averages the results.
+Clips outliers based on physical bounds.
+Export: Saves predictions to wise-watermelon_v26.parquet and wise-watermelon_final.parquet.
+📊 Performance
+Metric	Score (5-Fold CV)
+RMSE	213.89
+Train RMSE	135.51
+📝 Usage
+Ensure the dataset paths in the "Configuration" cell match your local directory structure.
+Run the notebook cells sequentially.
+The notebook will train the models and automatically generate the submission files in the root directory.
+Created for the PRC-2025 Challenge.
