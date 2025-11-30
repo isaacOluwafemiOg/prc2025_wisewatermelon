@@ -1,6 +1,6 @@
 # prc2025_wisewatermelon
 submission for prc2025 data challenge of predicting fuel consumption for specified flight segments
-The submission contains two notebook:
+The submission contains two notebooks:
 - `prepare_data.ipynb`
 - `train_predict.ipynb`
 
@@ -55,7 +55,7 @@ The notebook performs the following high-level tasks:
 
 6. **Export prepared datasets**
    - Prepares three datasets:
-     - `prep_train_acropole_test.csv`
+     - `prep_train_acropole.csv`
      - `prep_rank_acropole.csv`
      - `prep_final_acropole.csv`
    - Each dataset contains **flight metadata, trajectory statistics, fuel estimates, and phase-specific features** to be used by `train_predict.ipynb` for modeling and prediction.
