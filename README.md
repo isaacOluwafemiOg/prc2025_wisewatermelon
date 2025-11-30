@@ -98,13 +98,6 @@ The notebook is run in a conda environment defined by `data_prep_environment.yml
 
 ---
 
-### **References**
-
-- FAA Aircraft Characteristic Database: [https://www.faa.gov/airports/engineering/aircraft_char_database/](https://www.faa.gov/airports/engineering/aircraft_char_database/)
-- ACP / Acropole fuel estimation library
-- OpenAP aircraft performance database
-
-Here is a comprehensive `README.md` file tailored for your GitHub repository. It encapsulates the entire workflow, the specific methodology you used (Stratified Group K-Fold, CatBoost), and the file structure.
 
 
 ## TRAIN_PREDICT NOTEBOOK
